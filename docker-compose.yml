@@ -1,0 +1,94 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: ccda_db
+    restart: always
+    environment:
+      POSTGRES_USER: ccda
+      POSTGRES_PASSWORD: ccda
+      POSTGRES_DB: ccda
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: ccda_backend
+    restart: always
+    environment:
+      DATABASE_URL: postgres://ccda:ccda@db:5432/ccda
+      WS_PORT: 4000
+      API_PORT: 3000
+      WS_TOKEN: my-secret-token
+    ports:
+      - "3000:3000"
+      - "4000:4000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: ccda_frontend
+    restart: always
+    environment:
+      VITE_API_URL: http://localhost:3000
+      VITE_WS_URL: ws://localhost:4000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+
+  env_sensor:
+    build: ./hardware/envSensorService
+    container_name: ccda_env_sensor
+    restart: always
+    depends_on:
+      - backend
+    volumes:
+      - ./hardware/envSensorService:/app
+
+  sensehat:
+    build: ./hardware/senseHatService
+    container_name: ccda_sensehat
+    restart: always
+    depends_on:
+      - backend
+    volumes:
+      - ./hardware/senseHatService:/app
+
+  arduino_bridge:
+    build: ./hardware/arduinoBridge
+    container_name: ccda_arduino_bridge
+    restart: always
+    depends_on:
+      - backend
+    volumes:
+      - ./hardware/arduinoBridge:/app
+
+  imu_service:
+    build: ./hardware/imuService
+    container_name: ccda_imu
+    restart: always
+    depends_on:
+      - backend
+    volumes:
+      - ./hardware/imuService:/app
+
+  led_matrix:
+    build: ./hardware/ledMatrixService
+    container_name: ccda_led_matrix
+    restart: always
+    depends_on:
+      - backend
+    volumes:
+      - ./hardware/ledMatrixService:/app
+
+volumes:
+  db_data

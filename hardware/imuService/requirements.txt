@@ -1,0 +1,2 @@
+mpu6050-raspberrypi==1.2
+websockets==12.0
