@@ -1,23 +1,45 @@
-import { AppOrchestrator } from "../AppOrchestrator";
-import { db } from "../db";
+// src/services/SenseHatService.ts
+import os from "os";
 
 export class SenseHatService {
-  constructor(private main: AppOrchestrator) {}
+  latest: any = null;
 
-  async handleUpdate(updateData: any) {
-    const { temperature, humidity, pressure } = updateData;
+  constructor(private app: any) {
+    this.startSimulation();
+  }
 
-    await db.query(
-      "INSERT INTO sensor_history (sensor, value) VALUES ($1, $2)",
-      ["temperature", temperature]
-    );
+  startSimulation() {
+    // Telemetry loop (every 2 seconds)
+    setInterval(() => {
+      const sample = {
+        type: "sensehat",
+        payload: {
+          temperature: 20 + Math.random() * 5,
+          humidity: 40 + Math.random() * 20,
+          pressure: 980 + Math.random() * 40
+        }
+      };
 
-    const analytics = this.main.analytics.processSensor("temperature", temperature);
+      this.latest = sample.payload;   // <-- CORRECT PATCH
+      this.app.realtime.broadcast("sensehat", sample);
+    }, 2000);
 
-    this.main.realtime.broadcast("sensehat", {
-      type: "sensehat",
-      payload: updateData,
-      recommendations: analytics.recommendations
-    });
+    // AI recommendation loop (every 10 seconds)
+    setInterval(async () => {
+      const context = this.latest || {
+        temperature: 22,
+        humidity: 50,
+        pressure: 1000
+      };
+
+      const rec = await this.app.ai.generateRecommendation(
+        JSON.stringify(context)
+      );
+
+      this.app.realtime.broadcast("sensehat", {
+        type: "recommendations",
+        recommendations: [rec]
+      });
+    }, 10000);
   }
 }

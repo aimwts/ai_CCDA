@@ -10,7 +10,7 @@ export default function SystemMonitor() {
   const [status, setStatus] = useState<any>({});
 
   useEffect(() => {
-    if (wsMessage?.type === "systemStatus") {
+    if (wsMessage?.type === "system") {
       setStatus(wsMessage.payload);
     }
   }, [wsMessage]);
@@ -34,11 +34,6 @@ export default function SystemMonitor() {
         <MetricCard label="Memory Usage" value={`${status.memory}%`} />
       </div>
 
-      <h2 className="text-xl font-semibold mb-4">Details</h2>
-
-      <pre className="bg-white p-4 rounded shadow text-sm">
-        {JSON.stringify(status.details || {}, null, 2)}
-      </pre>
     </PageContainer>
   );
 }

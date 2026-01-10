@@ -1,23 +1,45 @@
-import { AppOrchestrator } from "../AppOrchestrator";
-import { db } from "../db";
+// src/services/PlantMonService.ts
+import { RealtimeServer } from "../websocket/WebSocketServer";
 
 export class PlantMonService {
-  constructor(private main: AppOrchestrator) {}
+  latest: any = null;
 
-  async handleUpdate(updateData: any) {
-    const { moisture, light, temperature } = updateData;
+  constructor(private app: any) {
+    this.startSimulation();
+  }
 
-    await db.query(
-      "INSERT INTO sensor_history (sensor, value) VALUES ($1, $2)",
-      ["moisture", moisture]
-    );
+  startSimulation() {
+    // Telemetry loop (every 2 seconds)
+    setInterval(() => {
+      const sample = {
+        type: "plant",
+        payload: {
+          moisture: Math.floor(Math.random() * 100),
+          light: 100 + Math.floor(Math.random() * 300),
+          temperature: 20 + Math.random() * 5
+        }
+      };
 
-    const analytics = this.main.analytics.processSensor("moisture", moisture);
+      this.latest = sample.payload;   // <-- CORRECT PATCH
+      this.app.realtime.broadcast("plant", sample);
+    }, 2000);
 
-    this.main.realtime.broadcast("plant", {
-      type: "plant",
-      payload: updateData,
-      recommendations: analytics.recommendations
-    });
+    // AI recommendation loop (every 10 seconds)
+    setInterval(async () => {
+      const context = this.latest || {
+        moisture: 50,
+        light: 200,
+        temperature: 22
+      };
+
+      const rec = await this.app.ai.generateRecommendation(
+        JSON.stringify(context)
+      );
+
+      this.app.realtime.broadcast("plant", {
+        type: "recommendations",
+        recommendations: [rec]
+      });
+    }, 10000);
   }
 }
