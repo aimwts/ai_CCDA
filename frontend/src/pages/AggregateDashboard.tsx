@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import PageContainer from "../components/Layout/PageContainer";
-import SensorCard from "../components/SensorCard";
-import StatusCard from "../components/StatusCard";
-import MiniChart from "../components/MiniChart";
+import SensorCard from "../components/ui/SensorCard";
+import StatusCard from "../components/ui/StatusCard";
+import MiniChart from "../components/ui/MiniChart";
 import { useWebSocket } from "../hooks/useWebSocket";
 
 export default function AggregateDashboard() {

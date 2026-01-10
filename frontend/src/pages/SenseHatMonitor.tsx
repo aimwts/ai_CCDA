@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import PageContainer from "../components/Layout/PageContainer";
-import SensorCard from "../components/SensorCard";
-import LiveChart from "../components/LiveChart";
-import IMUOrientation from "../components/IMUOrientation";
-import JoystickIndicator from "../components/JoystickIndicator";
+import SensorCard from "../components/ui/SensorCard";
+import LiveChart from "../components/ui/LiveChart";
+import IMUOrientation from "../components/ui/IMUOrientation";
+import JoystickIndicator from "../components/ui/JoystickIndicator";
 import { useWebSocket } from "../hooks/useWebSocket";
 
 export default function SenseHatMonitor() {

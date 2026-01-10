@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PageContainer from "../components/Layout/PageContainer";
-import HealthIndicator from "../components/HealthIndicator";
-import MetricCard from "../components/MetricCard";
+import HealthIndicator from "../components/ui/HealthIndicator";
+import MetricCard from "../components/ui/MetricCard";
 import { useWebSocket } from "../hooks/useWebSocket";
 
 export default function SystemMonitor() {

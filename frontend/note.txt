@@ -1,0 +1,66 @@
+npm run dev
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+
+nvm install 20.19.0
+nvm install 22
+nvm use 20.19.0
+node -v
+
+Step 1 — Confirm your current Node version in WSL
+Run:
+node -v
+
+✅ Step 2 — Switch to the correct Node version using nvm
+If you installed Node 20.19.0 or Node 22 earlier, activate it:
+
+Code
+nvm use 20.19.0
+or:
+Code
+nvm use 22
+If you get “command not found”, then nvm wasn’t loaded — run:
+Code
+source ~/.bashrc
+Then try again.
+
+rm -rf node_modules package-lock.json
+npm install
+This ensures all dependencies are rebuilt under the correct Node runtime.
+
+find . -maxdepth 3 -iname "vite.config.*"
+grep -R "\"type\"" package.json
+grep -R "require(" -n .
+
+find src -maxdepth 3 -type f -iname "*.tsx"
+mv src/pages/ZonePage.tsx src/pages/ZonesPage.tsx
+Fix: Completely reinstall Vite and clear its cache
+Run these commands exactly:
+
+1. Remove Vite’s cache
+Code
+rm -rf node_modules/.vite
+2. Remove all dependencies and lockfile
+Code
+rm -rf node_modules package-lock.json
+3. Reinstall everything cleanly under Node 20.19+
+Code
+npm install
+4. Explicitly reinstall the correct Vite + React plugin versions
+Code
+npm install vite@latest @vitejs/plugin-react@latest --save-dev
+This ensures you get the ESM-only Vite 5 build that matches your Node version.
+
+C:\Users\<YourWindowsUser>\AppData\Local\Packages\
+    CanonicalGroupLimited...Ubuntu...\LocalState\rootfs\
+        home\tsa\dev\ai_CCDA\frontend
+
+\\wsl$\Ubuntu\home\tsa\dev\ai_CCDA\frontend
+
+cd ~/dev/ai_CCDA
+git init
+git remote add origin https://github.com/aimwts/ai_CCDA.git
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git push -u origin main

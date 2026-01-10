@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PageContainer from "../components/Layout/PageContainer";
-import SensorCard from "../components/SensorCard";
-import LiveChart from "../components/LiveChart";
+import SensorCard from "../components/ui/SensorCard";
+import LiveChart from "../components/ui/LiveChart";
 import { useWebSocket } from "../hooks/useWebSocket";
 
 export default function PlantMonitor() {

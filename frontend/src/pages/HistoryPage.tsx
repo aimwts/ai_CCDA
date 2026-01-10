@@ -1,5 +1,5 @@
 import PageContainer from "../components/Layout/PageContainer";
-import HistoricalChart from "../components/HistoricalChart";
+import HistoricalChart from "../components/ui/HistoricalChart";
 import { useHistory } from "../hooks/useHistory";
 import { useState } from "react";
 
