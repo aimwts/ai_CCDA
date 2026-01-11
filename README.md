@@ -2,7 +2,7 @@
 ---
 
 # **AI CC/DA Monitoring System**  
-A full‑stack, real‑time monitoring and analytics platform integrating plant sensors, SenseHat telemetry, Python microservices, WebSockets, AI analytics, and a modern React dashboard.
+A full‑stack, real‑time monitoring and analytics platform integrating machine/plant sensors, SenseHat telemetry, Python microservices, WebSockets, AI analytics, and a modern React dashboard.
 
 ---
 
@@ -10,7 +10,7 @@ A full‑stack, real‑time monitoring and analytics platform integrating plant 
 
 This system provides:
 
-- Real‑time sensor monitoring (Plant + SenseHat + Arduino + IMU)
+- Real‑time sensor monitoring (Machine/Plant + SenseHat + Arduino + IMU)
 - Historical analytics with zoomable charts
 - AI‑powered trend explanations and recommendations
 - System health monitoring (backend, Python services, SWIM, Arduino)
@@ -43,7 +43,7 @@ The architecture is designed for clarity, modularity, and production scalability
 
 ### **Hardware Services**
 - Python microservices for:
-  - Plant sensors  
+  - Machine/Plant sensors  
   - SenseHat  
   - Arduino bridge  
   - IMU  
@@ -178,7 +178,7 @@ Repeat for:
 
 | Channel | Purpose |
 |--------|---------|
-| `plant` | Plant sensor updates |
+| `plant` | Machine/Plant sensor updates |
 | `sensehat` | SenseHat telemetry |
 | `aggregate` | Combined sensor stream |
 | `system` | System health + uptime |
@@ -227,11 +227,11 @@ These run automatically on every sensor update.
 | Page | Purpose |
 |------|---------|
 | Home | Overview |
-| Plant Monitor | Moisture, light, temperature, live charts |
+| Machine/Plant Monitor | Moisture, light, temperature, live charts |
 | SenseHat Monitor | Temp, humidity, pressure, IMU, joystick |
 | Aggregate Dashboard | Combined sensor view |
 | System Monitor | Service health + metrics |
-| Zones | Plant grouping |
+| Zones | Machine/Plant grouping |
 | History | Historical analytics + charts |
 
 ---
