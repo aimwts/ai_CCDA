@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import PlantMonitor from "./pages/PlantMonitor";
+import MachineMonitor from "./pages/MachineMonitor";
 import SenseHatMonitor from "./pages/SenseHatMonitor";
 import AggregateDashboard from "./pages/AggregateDashboard";
 import SystemMonitor from "./pages/SystemMonitor";
@@ -12,7 +12,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/plant" element={<PlantMonitor />} />
+        <Route path="/machine" element={<MachineMonitor />} />
         <Route path="/sensehat" element={<SenseHatMonitor />} />
         <Route path="/aggregate" element={<AggregateDashboard />} />
         <Route path="/system" element={<SystemMonitor />} />

@@ -4,7 +4,7 @@ import { useHistory } from "../hooks/useHistory";
 import { useState } from "react";
 
 export default function HistoryPage() {
-  const [sensor, setSensor] = useState("plant");
+  const [sensor, setSensor] = useState("machine");
   const [hours, setHours] = useState(24);
 
   const { data, loading } = useHistory(sensor, hours);
@@ -17,7 +17,7 @@ export default function HistoryPage() {
           value={sensor}
           onChange={(e) => setSensor(e.target.value)}
         >
-          <option value="plant">Plant Sensors</option>
+          <option value="machine">Machine Sensors</option>
           <option value="sensehat">SenseHat Sensors</option>
           <option value="aggregate">Aggregate</option>
         </select>

@@ -4,7 +4,7 @@ export class AiAnomalyService {
     lastAnomalies: any[] | null = null;
     
         history: any = {
-        plant: [],
+        machine: [],
         sensehat: [],
         system: [],
         zones: {}
@@ -17,7 +17,7 @@ export class AiAnomalyService {
   startAnomalyLoop() {
     setInterval(async () => {
       const snapshot = {
-        plant: this.app.plant?.latest,
+        machine: this.app.machine?.latest,
         sensehat: this.app.sensehat?.latest,
         system: this.app.system?.latest,
         zones: this.app.zones?.latest
@@ -50,7 +50,7 @@ export class AiAnomalyService {
       if (arr.length > 20) arr.shift();
     };
 
-    if (snapshot.plant) push(this.history.plant, snapshot.plant);
+    if (snapshot.machine) push(this.history.machine, snapshot.machine);
     if (snapshot.sensehat) push(this.history.sensehat, snapshot.sensehat);
     if (snapshot.system) push(this.history.system, snapshot.system);
 
@@ -89,7 +89,7 @@ export class AiAnomalyService {
       }
     };
 
-    check("plant", snapshot.plant, this.history.plant);
+    check("machine", snapshot.machine, this.history.machine);
     check("sensehat", snapshot.sensehat, this.history.sensehat);
     check("system", snapshot.system, this.history.system);
 

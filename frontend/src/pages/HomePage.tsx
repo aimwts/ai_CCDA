@@ -7,7 +7,7 @@ export default function HomePage() {
 
       <p className="text-gray-700 leading-relaxed">
         This dashboard provides real‑time monitoring, analytics, and AI‑powered
-        insights for your plant sensors, SenseHat, system health, and historical
+        insights for your machine sensors, SenseHat, system health, and historical
         trends.
       </p>
 

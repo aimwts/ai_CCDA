@@ -19,7 +19,7 @@ import {
 } from "./types";
 
 // Telemetry Services
-import { PlantMonService } from "./services/PlantMonService";
+import { MachineMonService } from "./services/MachineMonService";
 import { SenseHatService } from "./services/SenseHatService";
 import { SystemMonitorService } from "./services/SystemMonitorService";
 
@@ -37,7 +37,7 @@ export class AppOrchestrator {
   aiFeed!: IRecommendationFeedService;
 
   // Telemetry services
-  plant!: PlantMonService;
+  machine!: MachineMonService;
   sense!: SenseHatService;
   system!: SystemMonitorService;
 
@@ -61,7 +61,7 @@ export class AppOrchestrator {
     // this.aiFeed = new RecommendationFeedService(apiKey);
 
     // Telemetry services
-    this.plant = new PlantMonService(this, apiKey);
+    this.machine = new MachineMonService(this, apiKey);
     this.sense = new SenseHatService(this, apiKey);
     this.system = new SystemMonitorService(this, apiKey);
 

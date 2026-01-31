@@ -22,7 +22,7 @@ export default function ZonesPage() {
           {zones.map((z) => (
             <div key={z.id} className="p-4 bg-white rounded shadow">
               <h3 className="text-lg font-semibold">{z.name}</h3>
-              <p className="text-gray-600">Plants: {z.plantCount}</p>
+              <p className="text-gray-600">Machines: {z.machineCount}</p>
             </div>
           ))}
         </div>

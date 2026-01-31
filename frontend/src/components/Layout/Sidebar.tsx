@@ -7,7 +7,7 @@ export default function Sidebar() {
 
       <nav className="flex flex-col gap-4">
         <Link to="/">Home</Link>
-        <Link to="/plant">Plant Monitor</Link>
+        <Link to="/machine">Machine Monitor</Link>
         <Link to="/sensehat">SenseHat Monitor</Link>
         <Link to="/aggregate">Aggregate Dashboard</Link>
         <Link to="/system">System Monitor</Link>

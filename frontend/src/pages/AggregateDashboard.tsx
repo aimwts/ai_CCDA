@@ -4,7 +4,7 @@ import { useWebSocket } from "../hooks/useWebSocket";
 
 export default function AggregateDashboard() {
   // WebSocket channels
-  const plantMsg = useWebSocket("plant");
+  const machineMsg = useWebSocket("machine");
   const senseMsg = useWebSocket("sensehat");
   const systemMsg = useWebSocket("system");
   const zone1Msg = useWebSocket("zone1");
@@ -18,7 +18,7 @@ export default function AggregateDashboard() {
   const rootMsg = useWebSocket("ai_rootcause");
 
   // State
-  const [plant, setPlant] = useState<any>({});
+  const [machine, setMachine] = useState<any>({});
   const [sense, setSense] = useState<any>({});
   const [system, setSystem] = useState<any>({});
   const [aiSummary, setAiSummary] = useState<string>("");
@@ -45,10 +45,10 @@ export default function AggregateDashboard() {
   zone3: false
   });
 
-  // Plant
+  // Machine
   useEffect(() => {
-    if (plantMsg?.type === "plant") setPlant(plantMsg.payload);
-  }, [plantMsg]);
+    if (machinetMsg?.type === "machine") setMachine(machineMsg.payload);
+  }, [machineMsg]);
 
   // SenseHat
   useEffect(() => {
@@ -269,12 +269,12 @@ function getZoneBadge(status: string) {
 <h2 className="text-xl font-semibold mb-4">Environment Overview</h2>
 
       <div className="grid grid-cols-3 gap-4 mb-8">
-        {/* Plant */}
+        {/* Machine */}
         <div className="p-4 bg-white rounded shadow">
-          <h3 className="font-semibold mb-2">Plant Monitor</h3>
-          <p>Moisture: {plant.moisture}</p>
-          <p>Light: {plant.light}</p>
-          <p>Temperature: {plant.temperature}</p>
+          <h3 className="font-semibold mb-2">Machine Monitor</h3>
+          <p>Moisture: {machine.moisture}</p>
+          <p>Light: {machine.light}</p>
+          <p>Temperature: {machine.temperature}</p>
         </div>
 
         {/* SenseHat */}
