@@ -1,23 +1,24 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { AiClient } from "./AiClient";
+import { IAiRecommendationService } from "../types";
 
-export class AiRecommendationService {
-  private model;
+export class AiRecommendationService implements IAiRecommendationService {
+  constructor(private ai: AiClient) {}
 
-  constructor(apiKey: string) {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    this.model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  }
+  async generateRecommendation(input: string): Promise<string[]> {
+    const prompt = `
+You are an expert recommendation engine. Based on the following input, generate a concise list of 3–5 actionable recommendations. 
+Each recommendation should be a single sentence, starting with a verb. Format as a plain list.
 
-  async generateRecommendation(context: string) {
-    try {
-      const result = await this.model.generateContent(
-        `Give one short actionable recommendation based on this data:\n${context}`
-      );
+Input:
+${input}
+`;
 
-      return result.response.text();
-    } catch (err) {
-      console.error("AI error:", err);
-      return "No recommendation available.";
-    }
+    const raw = await this.ai.generateText(prompt);
+
+    // Split into lines and filter out empty or non-bullet lines
+    return raw
+      .split("\n")
+      .map(line => line.trim().replace(/^[-*]\s*/, ""))
+      .filter(line => line.length > 0);
   }
 }

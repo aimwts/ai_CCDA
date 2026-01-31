@@ -1,10 +1,11 @@
-// src/services/SenseHatService.ts
-import os from "os";
+import { AiClient } from "./AiClient";
 
 export class SenseHatService {
   latest: any = null;
+  private client: AiClient;
 
-  constructor(private app: any) {
+  constructor(private app: any, apiKey: string) {
+    this.client = AiClient.getInstance(apiKey);
     this.startSimulation();
   }
 
@@ -14,27 +15,21 @@ export class SenseHatService {
       const sample = {
         type: "sensehat",
         payload: {
-          temperature: 20 + Math.random() * 5,
-          humidity: 40 + Math.random() * 20,
-          pressure: 980 + Math.random() * 40
+          humidity: 30 + Math.random() * 40,
+          pressure: 900 + Math.random() * 50,
+          temperature: 18 + Math.random() * 6
         }
       };
 
-      this.latest = sample.payload;   // <-- CORRECT PATCH
+      this.latest = sample.payload;
       this.app.realtime.broadcast("sensehat", sample);
     }, 2000);
 
-    // AI recommendation loop (every 10 seconds)
+    // AI insight loop (every 10 seconds)
     setInterval(async () => {
-      const context = this.latest || {
-        temperature: 22,
-        humidity: 50,
-        pressure: 1000
-      };
-
-      const rec = await this.app.ai.generateRecommendation(
-        JSON.stringify(context)
-      );
+      const context = this.latest || {};
+      const prompt = `Provide an insight based on this SenseHat telemetry:\n\n${JSON.stringify(context)}`;
+      const rec = await this.client.generateText(prompt);
 
       this.app.realtime.broadcast("sensehat", {
         type: "recommendations",

@@ -1,40 +1,19 @@
-// src/services/AiSummaryService.ts
+import { AiClient } from "./AiClient";
+import { ISummaryService } from "../types/ISummaryService";
 
-export class AiSummaryService {
-  constructor(private app: any) {
-    this.startSummaryLoop();
+export class SummaryService implements ISummaryService {
+  private client: AiClient;
+
+  constructor(apiKey: string) {
+    this.client = AiClient.getInstance(apiKey);
   }
 
-  startSummaryLoop() {
-    setInterval(async () => {
-      const snapshot = {
-        plant: this.app.plant?.latest,
-        sensehat: this.app.sensehat?.latest,
-        system: this.app.system?.latest,
-        zones: this.app.zones?.latest
-      };
-
-      const rec = await this.app.ai.generateRecommendation(
-        `Provide a short executive summary of the system state:\n${JSON.stringify(snapshot)}`
-      );
-
-      this.app.realtime.broadcast("ai_summary", {
-        type: "ai_summary",
-        summary: rec,
-        severity: this.detectSeverity(rec)
-      });
-    }, 15000);
+  async generate(prompt: string): Promise<string> {
+    return this.client.generateText(prompt);
   }
 
-  detectSeverity(text: string) {
-    const t = text.toLowerCase();
-
-    if (t.includes("critical") || t.includes("urgent") || t.includes("failure"))
-      return "critical";
-
-    if (t.includes("warning") || t.includes("elevated") || t.includes("rising"))
-      return "warning";
-
-    return "normal";
+  async summarize(context: string): Promise<string> {
+    const prompt = `Summarize the following data in clear, concise language:\n\n${context}`;
+    return this.generate(prompt);
   }
 }

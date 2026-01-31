@@ -1,4 +1,3 @@
-// src/websocket/WebSocketServer.ts
 import { WebSocketServer } from "ws";
 import url from "url";
 
@@ -21,7 +20,10 @@ export class RealtimeServer {
         return;
       }
 
-      if (!this.channels[channel]) this.channels[channel] = new Set();
+      if (!this.channels[channel]) {
+        this.channels[channel] = new Set();
+      }
+
       this.channels[channel].add(ws);
 
       ws.send(JSON.stringify({ type: "connected", channel }));
@@ -41,7 +43,9 @@ export class RealtimeServer {
     const clients = this.channels[channel] || new Set();
 
     clients.forEach((client) => {
-      if (client.readyState === 1) client.send(msg);
+      if (client.readyState === 1) {
+        client.send(msg);
+      }
     });
   }
 }

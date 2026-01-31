@@ -1,10 +1,12 @@
-// src/services/PlantMonService.ts
 import { RealtimeServer } from "../websocket/WebSocketServer";
+import { AiClient } from "./AiClient";
 
 export class PlantMonService {
   latest: any = null;
+  private client: AiClient;
 
-  constructor(private app: any) {
+  constructor(private app: any, apiKey: string) {
+    this.client = AiClient.getInstance(apiKey);
     this.startSimulation();
   }
 
@@ -20,21 +22,15 @@ export class PlantMonService {
         }
       };
 
-      this.latest = sample.payload;   // <-- CORRECT PATCH
+      this.latest = sample.payload;
       this.app.realtime.broadcast("plant", sample);
     }, 2000);
 
     // AI recommendation loop (every 10 seconds)
     setInterval(async () => {
-      const context = this.latest || {
-        moisture: 50,
-        light: 200,
-        temperature: 22
-      };
-
-      const rec = await this.app.ai.generateRecommendation(
-        JSON.stringify(context)
-      );
+      const context = this.latest || {};
+      const prompt = `Provide a plant‑care recommendation:\n\n${JSON.stringify(context)}`;
+      const rec = await this.client.generateText(prompt);
 
       this.app.realtime.broadcast("plant", {
         type: "recommendations",

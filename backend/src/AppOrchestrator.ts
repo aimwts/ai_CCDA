@@ -1,29 +1,69 @@
 // src/AppOrchestrator.ts
 import { RealtimeServer } from "./websocket/WebSocketServer";
+
+// AI Services
+import { AiClient } from "./services/AiClient";
+import { AiRecommendationService } from "./services/AiRecommendationService";
+import { AiTrendService } from "./services/AiTrendService";
+import { SummaryService } from "./services/AiSummaryService";
+import { RootCauseService } from "./services/AiRootCauseService";
+import { RecommendationFeedService } from "./services/AiRecommendationFeedService";
+
+// AI Interfaces
+import {
+  IAiRecommendationService,
+  ITrendService,
+  ISummaryService,
+  IRootCauseService,
+  IRecommendationFeedService
+} from "./types";
+
+// Telemetry Services
 import { PlantMonService } from "./services/PlantMonService";
 import { SenseHatService } from "./services/SenseHatService";
 import { SystemMonitorService } from "./services/SystemMonitorService";
-import { AiRecommendationService } from "./services/AiRecommendationService";
-import { AiSummaryService } from "./services/AiSummaryService";
-import { AiAnomalyService } from "./services/AiAnomalyService";
 
 export class AppOrchestrator {
   realtime!: RealtimeServer;
+
+  // Shared AI client
+  ai!: AiClient;
+
+  // Typed AI service fields
+  aiRecommendation!: IAiRecommendationService;
+  aiTrend!: ITrendService;
+  aiSummary!: ISummaryService;
+  aiRootCause!: IRootCauseService;
+  aiFeed!: IRecommendationFeedService;
+
+  // Telemetry services
   plant!: PlantMonService;
-  sensehat!: SenseHatService;
+  sense!: SenseHatService;
   system!: SystemMonitorService;
-  ai!: AiRecommendationService;
-  aiSummary!: AiSummaryService;
-  anomaly!: AiAnomalyService;
 
   init() {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("Missing GEMINI_API_KEY in environment");
+    }
+
+    // WebSocket server
     this.realtime = new RealtimeServer(4000);
-    this.plant = new PlantMonService(this);
-    this.sensehat = new SenseHatService(this);
-    this.system = new SystemMonitorService(this);
-    this.ai = new AiRecommendationService(process.env.GEMINI_API_KEY!);
-    this.aiSummary = new AiSummaryService(this);
-    this.anomaly = new AiAnomalyService(this);
+
+    // Shared AI client (singleton)
+    this.ai = AiClient.getInstance(apiKey);
+
+    // AI services
+    this.aiRecommendation = new AiRecommendationService(this.ai);
+    // this.aiTrend = new AiTrendService(apiKey);
+    // this.aiSummary = new SummaryService(apiKey);
+    // this.aiRootCause = new RootCauseService(apiKey);
+    // this.aiFeed = new RecommendationFeedService(apiKey);
+
+    // Telemetry services
+    this.plant = new PlantMonService(this, apiKey);
+    this.sense = new SenseHatService(this, apiKey);
+    this.system = new SystemMonitorService(this, apiKey);
 
     console.log("App orchestrator initialized");
   }

@@ -1,19 +1,24 @@
-import express from "express";
-import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
+
 import { AppOrchestrator } from "./AppOrchestrator";
-import historyRoutes from "./routes/history";
-import analyticsRoutes from "./routes/analytics";
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+function main() {
+  const app = new AppOrchestrator();
+  app.init();
+}
 
-app.use("/history", historyRoutes);
-app.use("/analytics", analyticsRoutes);
+main();
 
-const orchestrator = new AppOrchestrator();
-orchestrator.init();
+import { AiClient } from "./services/AiClient";
 
-app.listen(3000, () => {
-  console.log("Backend running on http://localhost:3000");
-});
+async function testGemini() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("Missing GEMINI_API_KEY");
+
+  const ai = AiClient.getInstance(apiKey);
+  const response = await ai.generateText("List 3 creative uses for a paperclip.");
+  console.log("Gemini response:\n", response);
+}
+
+testGemini();

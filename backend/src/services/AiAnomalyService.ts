@@ -1,11 +1,13 @@
 // src/services/AiAnomalyService.ts
 
 export class AiAnomalyService {
-  history: any = {
-    plant: [],
-    sensehat: [],
-    system: [],
-    zones: {}
+    lastAnomalies: any[] | null = null;
+    
+        history: any = {
+        plant: [],
+        sensehat: [],
+        system: [],
+        zones: {}
   };
 
   constructor(private app: any) {
@@ -22,6 +24,9 @@ export class AiAnomalyService {
       };
 
       const anomalies = this.detectAnomalies(snapshot);
+
+      // Add this line — 
+      this.lastAnomalies = anomalies;
 
       if (anomalies.length > 0) {
         const aiExplanation = await this.app.ai.generateRecommendation(
