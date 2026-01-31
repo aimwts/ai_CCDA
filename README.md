@@ -1,8 +1,8 @@
 
 ---
 
-# **AI CC/DA Monitoring System**  
-A full‑stack, real‑time monitoring and analytics platform integrating machine/plant sensors, SenseHat telemetry, Python microservices, WebSockets, AI analytics, and a modern React dashboard.
+# **AI CC/DA (Control Center and Data Analysis) Machine Monitoring System for AI Factory**  
+A full‑stack, real‑time monitoring and analytics platform integrating machine sensors, SenseHat telemetry, Python microservices, WebSockets, AI analytics, and a modern React dashboard.
 
 ---
 
@@ -10,7 +10,7 @@ A full‑stack, real‑time monitoring and analytics platform integrating machin
 
 This system provides:
 
-- Real‑time sensor monitoring (Machine/Plant + SenseHat + Arduino + IMU)
+- Real‑time sensor monitoring (Machine + SenseHat + Arduino + IMU)
 - Historical analytics with zoomable charts
 - AI‑powered trend explanations and recommendations
 - System health monitoring (backend, Python services, SWIM, Arduino)
@@ -43,7 +43,7 @@ The architecture is designed for clarity, modularity, and production scalability
 
 ### **Hardware Services**
 - Python microservices for:
-  - Machine/Plant sensors  
+  - Machine sensors  
   - SenseHat  
   - Arduino bridge  
   - IMU  
