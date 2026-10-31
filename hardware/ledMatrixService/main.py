@@ -2,12 +2,16 @@ import asyncio
 import json
 import websockets
 import os
-from sense_hat import SenseHat
+
+try:
+    from sense_hat import SenseHat
+except ImportError:
+    SenseHat = None
 
 BACKEND_WS_URL = os.getenv("BACKEND_WS_URL", "ws://backend:4000/led")
 WS_TOKEN = os.getenv("WS_TOKEN", "my-secret-token")
 
-sense = SenseHat()
+sense = SenseHat() if SenseHat else None
 RECONNECT_DELAY = 3
 
 async def led_loop():
@@ -25,14 +29,21 @@ async def led_loop():
                         print(f"📥 LED Command: {data}")
 
                         if "text" in data:
-                            sense.show_message(data["text"], scroll_speed=0.05)
+                            if sense is None:
+                                print("⚠️ LED Matrix unavailable in this environment.")
+                            else:
+                                sense.show_message(data["text"], scroll_speed=0.05)
 
                         if "pixel" in data:
-                            x, y, r, g, b = data["pixel"]
-                            sense.set_pixel(x, y, r, g, b)
+                            if sense is None:
+                                print("⚠️ LED Matrix unavailable in this environment.")
+                            else:
+                                x, y, r, g, b = data["pixel"]
+                                sense.set_pixel(x, y, r, g, b)
 
                         if "clear" in data:
-                            sense.clear()
+                            if sense is not None:
+                                sense.clear()
 
                     except Exception as e:
                         print(f"⚠️ LED command error: {e}")

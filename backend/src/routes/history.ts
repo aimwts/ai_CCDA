@@ -8,7 +8,7 @@ router.get("/:sensor", async (req, res) => {
   const hours = Number(req.query.hours || 24);
 
   const result = await db.query(
-    "SELECT sensor, value, timestamp FROM sensor_history WHERE sensor = $1 AND timestamp > NOW() - INTERVAL $2 HOUR ORDER BY timestamp ASC",
+    "SELECT sensor, value, timestamp FROM sensor_history WHERE sensor = $1 AND timestamp > NOW() - ($2 || ' hours')::interval ORDER BY timestamp ASC",
     [sensor, hours]
   );
 

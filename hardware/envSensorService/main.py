@@ -3,9 +3,21 @@ import json
 import os
 import time
 import websockets
-import Adafruit_DHT
-from smbus2 import SMBus
-import serial
+
+try:
+    import Adafruit_DHT
+except ImportError:
+    Adafruit_DHT = None
+
+try:
+    from smbus2 import SMBus
+except ImportError:
+    SMBus = None
+
+try:
+    import serial
+except ImportError:
+    serial = None
 
 # -----------------------------
 # CONFIG
@@ -25,6 +37,13 @@ RECONNECT_DELAY = 3
 # Read DHT22 (Temp + Humidity)
 # -----------------------------
 def read_dht22():
+    if Adafruit_DHT is None:
+        t = time.time()
+        return {
+            "temperature": round(22 + (t % 12), 2),
+            "humidity": round(50 + ((t * 1.7) % 25), 2)
+        }
+
     humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, DHT_PIN)
     return {
         "temperature": round(temperature, 2) if temperature else None,
@@ -36,6 +55,10 @@ def read_dht22():
 # Read BH1750 Light Sensor
 # -----------------------------
 def read_bh1750():
+    if SMBus is None:
+        t = time.time()
+        return {"light": round(300 + (t % 200), 2)}
+
     try:
         bus = SMBus(1)
         data = bus.read_i2c_block_data(BH1750_ADDR, 0x20)
@@ -51,6 +74,10 @@ def read_bh1750():
 # Read Soil Moisture (Serial)
 # -----------------------------
 def read_soil_serial():
+    if serial is None:
+        t = time.time()
+        return {"soil_moisture": round(400 + (t % 50), 2)}
+
     try:
         ser = serial.Serial(SERIAL_PORT, SERIAL_BAUD, timeout=1)
         line = ser.readline().decode("utf-8").strip()

@@ -9,11 +9,11 @@ router.post("/explain", async (req, res) => {
   const { sensor, hours } = req.body;
 
   const result = await db.query(
-    "SELECT value FROM sensor_history WHERE sensor = $1 AND timestamp > NOW() - INTERVAL $2 HOUR",
+    "SELECT value FROM sensor_history WHERE sensor = $1 AND timestamp > NOW() - ($2 || ' hours')::interval",
     [sensor, hours]
   );
 
-  const explanation = await analytics.explain(sensor, result.rows.map(r => r.value));
+  const explanation = await analytics.explain(sensor, result.rows.map((r: any) => r.value));
 
   res.json({ explanation });
 });

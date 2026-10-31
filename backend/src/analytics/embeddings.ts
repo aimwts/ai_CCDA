@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "../db";
-import { sql } from "drizzle-orm";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
@@ -41,11 +40,12 @@ export async function storeMessageEmbedding(
 ) {
   const embedding = await embedText(text);
 
-  await db.execute(
-    sql`
-      INSERT INTO message_embeddings (message_id, embedding)
-      VALUES (${messageId}, ${embedding})
+  await db.query(
     `
+      INSERT INTO message_embeddings (message_id, embedding)
+      VALUES ($1, $2)
+    `,
+    [messageId, embedding]
   );
 
   return embedding;
@@ -58,13 +58,14 @@ export async function storeKnowledgeEmbedding(
 ) {
   const embedding = await embedText(text);
 
-  await db.execute(
-    sql`
+  await db.query(
+    `
       INSERT INTO knowledge_embeddings (id, embedding)
-      VALUES (${id}, ${embedding})
+      VALUES ($1, $2)
       ON CONFLICT (id)
       DO UPDATE SET embedding = EXCLUDED.embedding
-    `
+    `,
+    [id, embedding]
   );
 
   return embedding;
@@ -77,16 +78,17 @@ export async function getRelevantKnowledge(
 ) {
   const queryEmbedding = await embedText(query);
 
-  const rows = await db.execute(
-    sql`
+  const rows = await db.query(
+    `
       SELECT
         id,
         content,
-        1 - (embedding <=> ${queryEmbedding}) AS similarity
+        1 - (embedding <=> $1) AS similarity
       FROM knowledge_embeddings
-      ORDER BY embedding <=> ${queryEmbedding}
-      LIMIT ${limit}
-    `
+      ORDER BY embedding <=> $1
+      LIMIT $2
+    `,
+    [queryEmbedding, limit]
   );
 
   return rows;
@@ -99,15 +101,16 @@ export async function getSimilarMessages(
 ) {
   const queryEmbedding = await embedText(query);
 
-  const rows = await db.execute(
-    sql`
+  const rows = await db.query(
+    `
       SELECT
         message_id,
-        1 - (embedding <=> ${queryEmbedding}) AS similarity
+        1 - (embedding <=> $1) AS similarity
       FROM message_embeddings
-      ORDER BY embedding <=> ${queryEmbedding}
-      LIMIT ${limit}
-    `
+      ORDER BY embedding <=> $1
+      LIMIT $2
+    `,
+    [queryEmbedding, limit]
   );
 
   return rows;

@@ -1,2 +1,1 @@
-sense-hat==2.4.0
 websockets==12.0

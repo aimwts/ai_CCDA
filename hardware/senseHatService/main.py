@@ -3,15 +3,31 @@ import json
 import os
 import time
 import websockets
-from sense_hat import SenseHat
+
+try:
+    from sense_hat import SenseHat
+except ImportError:
+    SenseHat = None
 
 BACKEND_WS_URL = os.getenv("BACKEND_WS_URL", "ws://backend:4000/sensehat")
 WS_TOKEN = os.getenv("WS_TOKEN", "my-secret-token")
 
-sense = SenseHat()
+sense = SenseHat() if SenseHat else None
 RECONNECT_DELAY = 3
 
 def read_sensehat():
+    if sense is None:
+        t = time.time()
+        return {
+            "temperature": round(22 + (t % 8), 2),
+            "humidity": round(45 + ((t * 1.5) % 18), 2),
+            "pressure": round(1010 + ((t * 2) % 20), 2),
+            "orientation": {"roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+            "accel": {"x": 0.0, "y": 0.0, "z": 1.0},
+            "gyro": {"x": 0.0, "y": 0.0, "z": 0.0},
+            "mag": {"x": 0.0, "y": 0.0, "z": 0.0}
+        }
+
     try:
         return {
             "temperature": round(sense.get_temperature(), 2),

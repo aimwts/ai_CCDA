@@ -19,8 +19,13 @@ export class AiClient {
   }
 
   async generateText(prompt: string): Promise<string> {
-    const result = await this.model.generateContent([prompt]);
-    const response = await result.response;
-    return response.text() ?? "";
+    try {
+      const result = await this.model.generateContent([prompt]);
+      const response = await result.response;
+      return response.text() ?? "AI insight unavailable.";
+    } catch (error) {
+      console.warn("AI generation failed; using fallback text.", error);
+      return "AI insight unavailable. Configure a valid Gemini API key to enable live analysis.";
+    }
   }
 }
