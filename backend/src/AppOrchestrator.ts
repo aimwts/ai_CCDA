@@ -45,7 +45,7 @@ export class AppOrchestrator {
     const apiKey = process.env.GEMINI_API_KEY || "";
 
     // WebSocket server
-    this.realtime = new RealtimeServer(4000);
+    this.realtime = new RealtimeServer(Number(process.env.WS_PORT || 4000));
 
     // Shared AI client (singleton)
     this.ai = AiClient.getInstance(apiKey);

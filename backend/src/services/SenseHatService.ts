@@ -1,4 +1,5 @@
 import { AiClient } from "./AiClient";
+import { recordSensorSample } from "../db/telemetry";
 
 export class SenseHatService {
   latest: any = null;
@@ -23,6 +24,7 @@ export class SenseHatService {
 
       this.latest = sample.payload;
       this.app.realtime.broadcast("sensehat", sample);
+      void recordSensorSample("sensehat", sample.payload);
     }, 2000);
 
     // AI insight loop (every 10 seconds)

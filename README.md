@@ -111,16 +111,7 @@ If using Docker:
 docker-compose up -d db
 ```
 
-Create the history table:
-
-```sql
-CREATE TABLE sensor_history (
-  id SERIAL PRIMARY KEY,
-  sensor VARCHAR(50),
-  value DOUBLE PRECISION,
-  timestamp TIMESTAMP DEFAULT NOW()
-);
-```
+Create the history table by applying [`supabase/schema.sql`](supabase/schema.sql) to your PostgreSQL database. For Supabase, run the file in the project's SQL Editor.
 
 ---
 

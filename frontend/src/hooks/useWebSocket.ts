@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 
-export function useWebSocket(channel: string, token = "my-secret-token") {
+export function useWebSocket(
+  channel: string,
+  token = import.meta.env.VITE_WS_TOKEN || "my-secret-token"
+) {
   const [message, setMessage] = useState<any>(null);
 
   useEffect(() => {
-    const ws = new WebSocket(
-      `ws://localhost:4000?token=${token}&channel=${channel}`
-    );
+    const wsBase = (import.meta.env.VITE_WS_URL || "ws://localhost:4000").replace(/\/+$/, "");
+    const query = new URLSearchParams({ token, channel });
+    const ws = new WebSocket(`${wsBase}?${query.toString()}`);
 
     ws.onmessage = (event) => {
       try {

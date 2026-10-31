@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "../api/clients";
 
 export function useHistory(sensor: string, hours = 24) {
   const [data, setData] = useState<any[]>([]);
@@ -11,8 +11,8 @@ export function useHistory(sensor: string, hours = 24) {
     setLoading(true);
     setError(false);
 
-    axios
-      .get(`http://localhost:3000/history/${sensor}?hours=${hours}`)
+    api
+      .getHistory(sensor, hours)
       .then((res) => {
         if (mounted) setData(res.data);
       })

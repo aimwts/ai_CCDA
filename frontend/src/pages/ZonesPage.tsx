@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import PageContainer from "../components/Layout/PageContainer";
-import axios from "axios";
+import { api } from "../api/clients";
 
 export default function ZonesPage() {
   const [zones, setZones] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/zones").then((res) => {
+    api.getZones().then((res) => {
       setZones(res.data);
       setLoading(false);
     });

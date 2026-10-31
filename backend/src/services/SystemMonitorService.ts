@@ -1,4 +1,5 @@
 import { AiClient } from "./AiClient";
+import { recordSensorSample } from "../db/telemetry";
 
 export class SystemMonitorService {
   latest: any = null;
@@ -23,6 +24,7 @@ export class SystemMonitorService {
 
       this.latest = sample.payload;
       this.app.realtime.broadcast("system", sample);
+      void recordSensorSample("system", sample.payload);
     }, 2000);
 
     // AI system insight loop (every 10 seconds)

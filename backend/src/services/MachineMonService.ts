@@ -1,4 +1,5 @@
 import { RealtimeServer } from "../websocket/WebSocketServer";
+import { recordSensorSample } from "../db/telemetry";
 import { AiClient } from "./AiClient";
 
 export class MachineMonService {
@@ -24,6 +25,7 @@ export class MachineMonService {
 
       this.latest = sample.payload;
       this.app.realtime.broadcast("machine", sample);
+      void recordSensorSample("machine", sample.payload);
     }, 2000);
 
     // AI recommendation loop (every 10 seconds)

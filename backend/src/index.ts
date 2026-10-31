@@ -8,17 +8,31 @@ import { AppOrchestrator } from "./AppOrchestrator";
 import { AiClient } from "./services/AiClient";
 import analyticsRouter from "./routes/analytics";
 import historyRouter from "./routes/history";
+import { db } from "./db";
 
 function main() {
   const app = new AppOrchestrator();
   app.init();
 
   const api = express();
-  api.use(cors());
+  const allowedOrigins = process.env.CORS_ORIGIN
+    ?.split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  api.use(cors({ origin: allowedOrigins?.length ? allowedOrigins : true }));
   api.use(express.json());
 
   api.get("/health", (_, res) => {
     res.json({ status: "ok", service: "ai-ccda-backend" });
+  });
+
+  api.get("/health/db", async (_, res) => {
+    try {
+      await db.query("SELECT sensor, metric, value, timestamp FROM public.sensor_history LIMIT 0");
+      res.json({ status: "ok", database: "connected", schema: "ready" });
+    } catch {
+      res.status(503).json({ status: "error", database: "unavailable", schema: "not ready" });
+    }
   });
 
   api.get("/", (_, res) => {
@@ -56,7 +70,7 @@ function main() {
   api.use("/analytics", analyticsRouter);
   api.use("/history", historyRouter);
 
-  const port = Number(process.env.API_PORT || 3000);
+  const port = Number(process.env.API_PORT || process.env.PORT || 3000);
   api.listen(port, () => {
     console.log(`API server listening on http://localhost:${port}`);
   });

@@ -35,7 +35,7 @@ export class RealtimeServer {
   }
 
   validateToken(token: string): boolean {
-    return token === "my-secret-token";
+    return token === (process.env.WS_TOKEN || "my-secret-token");
   }
 
   broadcast(channel: string, data: any) {
