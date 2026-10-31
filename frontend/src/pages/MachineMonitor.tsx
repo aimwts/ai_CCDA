@@ -17,7 +17,7 @@ export default function MachineMonitor() {
 
     if (wsMessage.type === "machine") {
       const update = wsMessage.payload;
-      setData((prev) => ({ ...prev, ...update }));
+        setData((prev: Record<string, number>) => ({ ...prev, ...update }));
 
       const timestamp = new Date().toLocaleTimeString();
 

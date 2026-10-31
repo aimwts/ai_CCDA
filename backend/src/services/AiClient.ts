@@ -19,6 +19,10 @@ export class AiClient {
   }
 
   async generateText(prompt: string): Promise<string> {
+    if (!process.env.GEMINI_API_KEY) {
+      return "AI insight unavailable. Configure a valid Gemini API key to enable live analysis.";
+    }
+
     try {
       const result = await this.model.generateContent([prompt]);
       const response = await result.response;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api/client";
+import { api } from "../api/clients";
 
 export function useSystemStatus(pollInterval = 2000) {
   const [status, setStatus] = useState<any>({});

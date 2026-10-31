@@ -7,7 +7,7 @@ export default function HistoryPage() {
   const [sensor, setSensor] = useState("machine");
   const [hours, setHours] = useState(24);
 
-  const { data, loading } = useHistory(sensor, hours);
+  const { data, loading, error } = useHistory(sensor, hours);
 
   return (
     <PageContainer title="Historical Analytics">
@@ -35,7 +35,15 @@ export default function HistoryPage() {
         </select>
       </div>
 
-      {loading ? <p>Loading…</p> : <HistoricalChart data={data} />}
+      {loading ? (
+        <p>Loading…</p>
+      ) : error ? (
+        <p className="rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">
+          Historical data is unavailable. Start PostgreSQL and configure the backend database connection to view saved readings.
+        </p>
+      ) : (
+        <HistoricalChart data={data} />
+      )}
     </PageContainer>
   );
 }

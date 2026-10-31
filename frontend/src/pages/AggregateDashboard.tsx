@@ -22,7 +22,7 @@ export default function AggregateDashboard() {
   const [sense, setSense] = useState<any>({});
   const [system, setSystem] = useState<any>({});
   const [aiSummary, setAiSummary] = useState<string>("");
-  const [anomalies, setAnomalies] = useState([]);
+  const [anomalies, setAnomalies] = useState<Array<{ source: string; metric: string; baseline: number; value: number }>>([]);
   const [anomalyExplanation, setAnomalyExplanation] = useState("");
   const [feed, setFeed] = useState<string[]>([]);
   const [rootCause, setRootCause] = useState("");
@@ -47,7 +47,7 @@ export default function AggregateDashboard() {
 
   // Machine
   useEffect(() => {
-    if (machinetMsg?.type === "machine") setMachine(machineMsg.payload);
+    if (machineMsg?.type === "machine") setMachine(machineMsg.payload);
   }, [machineMsg]);
 
   // SenseHat

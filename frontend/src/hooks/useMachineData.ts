@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api/client";
+import { api } from "../api/clients";
 
 export function useMachine(pollInterval = 1000) {
   const [data, setData] = useState<any>({});

@@ -1,7 +1,8 @@
+import type { ReactNode } from "react";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 
-export default function PageContainer({ title, children }) {
+export default function PageContainer({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="flex h-screen">
       <Sidebar />

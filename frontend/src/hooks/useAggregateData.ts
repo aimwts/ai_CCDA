@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api/client";
+import { api } from "../api/clients";
 
 export function useAggregateData(pollInterval = 2000) {
   const [sensors, setSensors] = useState<any>({});
